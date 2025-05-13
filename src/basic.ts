@@ -48,6 +48,10 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         if (tyEnv[t.name] === undefined) throw new Error(`undefined variable: ${t.name}`);
         return tyEnv[t.name];
     }
+    case "func": {
+        const retType = typecheck(t.body, tyEnv);
+        return { tag: "Func", params: t.params, retType };
+    }
     default:
       throw new Error("not implemented yet");
   }
