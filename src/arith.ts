@@ -24,7 +24,11 @@ function typecheck(t: Term): Type {
             return { tag: "Number" };
         }
         case "add": {
-
+            const leftType = typecheck(t.left);
+            if (leftType.tag !== "Number") throw "number expected";
+            const rightType = typecheck(t.right);
+            if (rightType.tag !== "Number") throw "number expected";
+            return { tag: "Number" };
         }    
     }
 }
