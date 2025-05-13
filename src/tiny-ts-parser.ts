@@ -41,8 +41,22 @@ type Term =
   | { loc: Location; tag: "seq2"; body: Term[] }
   | { loc: Location; tag: "const2"; name: string; init: Term }
   | { loc: Location; tag: "assign"; name: string; init: Term }
-  | { loc: Location; tag: "for"; ary: Term; body: Term; idx: string; rest: Term }
-  | { loc: Location; tag: "forOf"; ary: Term; body: Term; var: string; rest: Term }
+  | {
+    loc: Location;
+    tag: "for";
+    ary: Term;
+    body: Term;
+    idx: string;
+    rest: Term;
+  }
+  | {
+    loc: Location;
+    tag: "forOf";
+    ary: Term;
+    body: Term;
+    var: string;
+    rest: Term;
+  }
   | { loc: Location; tag: "arrayNew"; aryType: Type }
   | { loc: Location; tag: "arrayExt"; ary: Term; val: Term }
   | { loc: Location; tag: "recordNew"; recordType: Type }
@@ -52,10 +66,30 @@ type Term =
   | { loc: Location; tag: "member"; base: Term; index: Term }
   | { loc: Location; tag: "objectNew"; props: PropertyTerm[] }
   | { loc: Location; tag: "objectGet"; obj: Term; propName: string }
-  | { loc: Location; tag: "taggedUnionNew"; tagLabel: string; props: PropertyTerm[]; as: Type }
+  | {
+    loc: Location;
+    tag: "taggedUnionNew";
+    tagLabel: string;
+    props: PropertyTerm[];
+    as: Type;
+  }
   | { loc: Location; tag: "taggedUnionExt"; term: Term; as: Type }
-  | { loc: Location; tag: "taggedUnionGet"; varName: string; clauses: VariantTerm[]; defaultClause: Term }
-  | { loc: Location; tag: "recFunc"; funcName: string; params: Param[]; retType: Type; body: Term; rest: Term }
+  | {
+    loc: Location;
+    tag: "taggedUnionGet";
+    varName: string;
+    clauses: VariantTerm[];
+    defaultClause: Term;
+  }
+  | {
+    loc: Location;
+    tag: "recFunc";
+    funcName: string;
+    params: Param[];
+    retType: Type;
+    body: Term;
+    rest: Term;
+  }
   | { loc: Location; tag: "typeAbs"; typeParams: string[]; body: Term }
   | { loc: Location; tag: "typeApp"; typeAbs: Term; typeArgs: Type[] }
   | { loc: Location; tag: "undefined" };
@@ -147,27 +181,58 @@ export type TypeForTaggedUnion =
   | { tag: "TaggedUnion"; variants: VariantTypeForTaggedUnion[] };
 
 export type ParamForTaggedUnion = { name: string; type: TypeForTaggedUnion };
-export type PropertyTypeForTaggedUnion = { name: string; type: TypeForTaggedUnion };
-export type VariantTypeForTaggedUnion = { tagLabel: string; props: PropertyTypeForTaggedUnion[] };
+export type PropertyTypeForTaggedUnion = {
+  name: string;
+  type: TypeForTaggedUnion;
+};
+export type VariantTypeForTaggedUnion = {
+  tagLabel: string;
+  props: PropertyTypeForTaggedUnion[];
+};
 
 export type TermForTaggedUnion =
   | { tag: "true" }
   | { tag: "false" }
-  | { tag: "if"; cond: TermForTaggedUnion; thn: TermForTaggedUnion; els: TermForTaggedUnion }
+  | {
+    tag: "if";
+    cond: TermForTaggedUnion;
+    thn: TermForTaggedUnion;
+    els: TermForTaggedUnion;
+  }
   | { tag: "number"; n: number }
   | { tag: "add"; left: TermForTaggedUnion; right: TermForTaggedUnion }
   | { tag: "var"; name: string }
   | { tag: "func"; params: ParamForTaggedUnion[]; body: TermForTaggedUnion }
   | { tag: "call"; func: TermForTaggedUnion; args: TermForTaggedUnion[] }
   | { tag: "seq"; body: TermForTaggedUnion; rest: TermForTaggedUnion }
-  | { tag: "const"; name: string; init: TermForTaggedUnion; rest: TermForTaggedUnion }
+  | {
+    tag: "const";
+    name: string;
+    init: TermForTaggedUnion;
+    rest: TermForTaggedUnion;
+  }
   | { tag: "objectNew"; props: PropertyTermForTaggedUnion[] }
   | { tag: "objectGet"; obj: TermForTaggedUnion; propName: string }
-  | { tag: "taggedUnionNew"; tagLabel: string; props: PropertyTermForTaggedUnion[]; as: TypeForTaggedUnion }
-  | { tag: "taggedUnionGet"; varName: string; clauses: VariantTermForTaggedUnion[] };
+  | {
+    tag: "taggedUnionNew";
+    tagLabel: string;
+    props: PropertyTermForTaggedUnion[];
+    as: TypeForTaggedUnion;
+  }
+  | {
+    tag: "taggedUnionGet";
+    varName: string;
+    clauses: VariantTermForTaggedUnion[];
+  };
 
-export type PropertyTermForTaggedUnion = { name: string; term: TermForTaggedUnion };
-export type VariantTermForTaggedUnion = { tagLabel: string; term: TermForTaggedUnion };
+export type PropertyTermForTaggedUnion = {
+  name: string;
+  term: TermForTaggedUnion;
+};
+export type VariantTermForTaggedUnion = {
+  tagLabel: string;
+  term: TermForTaggedUnion;
+};
 
 export type TypeForRecFunc =
   | { tag: "Boolean" }
@@ -179,7 +244,12 @@ export type ParamForRecFunc = { name: string; type: TypeForRecFunc };
 export type TermForRecFunc =
   | { tag: "true" }
   | { tag: "false" }
-  | { tag: "if"; cond: TermForRecFunc; thn: TermForRecFunc; els: TermForRecFunc }
+  | {
+    tag: "if";
+    cond: TermForRecFunc;
+    thn: TermForRecFunc;
+    els: TermForRecFunc;
+  }
   | { tag: "number"; n: number }
   | { tag: "add"; left: TermForRecFunc; right: TermForRecFunc }
   | { tag: "var"; name: string }
@@ -267,7 +337,10 @@ export type TypeForRec2 =
 
 export type ParamForRec2 = { name: string; type: TypeForRec2 };
 export type PropertyTypeForRec2 = { name: string; type: TypeForRec2 };
-export type VariantTypeForRec2 = { tagLabel: string; props: PropertyTypeForRec2[] };
+export type VariantTypeForRec2 = {
+  tagLabel: string;
+  props: PropertyTypeForRec2[];
+};
 
 export type TermForRec2 =
   | { tag: "true" }
@@ -282,7 +355,12 @@ export type TermForRec2 =
   | { tag: "const"; name: string; init: TermForRec2; rest: TermForRec2 }
   | { tag: "objectNew"; props: PropertyTermForRec2[] }
   | { tag: "objectGet"; obj: TermForRec2; propName: string }
-  | { tag: "taggedUnionNew"; tagLabel: string; props: PropertyTermForRec2[]; as: TypeForRec2 }
+  | {
+    tag: "taggedUnionNew";
+    tagLabel: string;
+    props: PropertyTermForRec2[];
+    as: TypeForRec2;
+  }
   | { tag: "taggedUnionGet"; varName: string; clauses: VariantTermForRec2[] }
   | {
     tag: "recFunc";
@@ -353,20 +431,47 @@ type TermForSelf =
   | { tag: "seq"; body: TermForSelf; rest: TermForSelf }
   | { tag: "const"; name: string; init: TermForSelf; rest: TermForSelf }
   | { tag: "assign"; name: string; init: TermForSelf }
-  | { tag: "for"; ary: TermForSelf; body: TermForSelf; idx: string; rest: TermForSelf }
-  | { tag: "forOf"; ary: TermForSelf; body: TermForSelf; var: string; rest: TermForSelf }
+  | {
+    tag: "for";
+    ary: TermForSelf;
+    body: TermForSelf;
+    idx: string;
+    rest: TermForSelf;
+  }
+  | {
+    tag: "forOf";
+    ary: TermForSelf;
+    body: TermForSelf;
+    var: string;
+    rest: TermForSelf;
+  }
   | { tag: "arrayNew"; aryType: TypeForSelf }
   | { tag: "arrayExt"; ary: TermForSelf; val: TermForSelf }
   | { tag: "recordNew"; recordType: TypeForSelf }
   | { tag: "recordCopy"; record: TermForSelf }
-  | { tag: "recordExt"; record: TermForSelf; key: TermForSelf; val: TermForSelf }
+  | {
+    tag: "recordExt";
+    record: TermForSelf;
+    key: TermForSelf;
+    val: TermForSelf;
+  }
   | { tag: "recordIn"; record: TermForSelf; key: TermForSelf }
   | { tag: "member"; base: TermForSelf; index: TermForSelf }
   | { tag: "objectNew"; props: PropertyTermForSelf[] }
   | { tag: "objectGet"; obj: TermForSelf; propName: string }
-  | { tag: "taggedUnionNew"; tagLabel: string; props: PropertyTermForSelf[]; as: TypeForSelf }
+  | {
+    tag: "taggedUnionNew";
+    tagLabel: string;
+    props: PropertyTermForSelf[];
+    as: TypeForSelf;
+  }
   | { tag: "taggedUnionExt"; term: TermForSelf; as: TypeForSelf }
-  | { tag: "taggedUnionGet"; varName: string; clauses: VariantTermForSelf[]; defaultClause: TermForSelf }
+  | {
+    tag: "taggedUnionGet";
+    varName: string;
+    clauses: VariantTermForSelf[];
+    defaultClause: TermForSelf;
+  }
   | {
     tag: "recFunc";
     funcName: string;
@@ -406,9 +511,15 @@ function freeTypeVars(ty: Type): Set<string> {
     case "Record":
       return freeTypeVars(ty.elemType);
     case "Func":
-      return ty.params.reduce((r, { type }) => r.union(freeTypeVars(type)), freeTypeVars(ty.retType));
+      return ty.params.reduce(
+        (r, { type }) => r.union(freeTypeVars(type)),
+        freeTypeVars(ty.retType),
+      );
     case "Object":
-      return ty.props.reduce((r, { type }) => r.union(freeTypeVars(type)), new Set<string>());
+      return ty.props.reduce(
+        (r, { type }) => r.union(freeTypeVars(type)),
+        new Set<string>(),
+      );
     case "TaggedUnion":
       return ty.variants.reduce((r, { props }) => {
         return props.reduce((r, { type }) => r.union(freeTypeVars(type)), r);
@@ -436,7 +547,11 @@ function extendContextWithTypeVars(ctx: Context, tyVars: string[]): Context {
 }
 
 // Expand type variables in a type
-function expandTypeAliases(ty: Type, recDefined: Set<string>, ctx: Context): Type {
+function expandTypeAliases(
+  ty: Type,
+  recDefined: Set<string>,
+  ctx: Context,
+): Type {
   switch (ty.tag) {
     case "Boolean":
       return { tag: "Boolean" };
@@ -445,66 +560,115 @@ function expandTypeAliases(ty: Type, recDefined: Set<string>, ctx: Context): Typ
     case "String":
       return { tag: "String" };
     case "Option":
-      return { tag: "Option", elemType: expandTypeAliases(ty.elemType, recDefined, ctx) };
+      return {
+        tag: "Option",
+        elemType: expandTypeAliases(ty.elemType, recDefined, ctx),
+      };
     case "Array":
-      return { tag: "Array", elemType: expandTypeAliases(ty.elemType, recDefined, ctx) };
+      return {
+        tag: "Array",
+        elemType: expandTypeAliases(ty.elemType, recDefined, ctx),
+      };
     case "Record":
-      return { tag: "Record", elemType: expandTypeAliases(ty.elemType, recDefined, ctx) };
+      return {
+        tag: "Record",
+        elemType: expandTypeAliases(ty.elemType, recDefined, ctx),
+      };
     case "Func": {
-      const params = ty.params.map(({ name, type }) => ({ name, type: expandTypeAliases(type, recDefined, ctx) }));
+      const params = ty.params.map(({ name, type }) => ({
+        name,
+        type: expandTypeAliases(type, recDefined, ctx),
+      }));
       const retType = expandTypeAliases(ty.retType, recDefined, ctx);
       return { tag: "Func", params, retType };
     }
     case "Object": {
-      const props = ty.props.map(({ name, type }) => ({ name, type: expandTypeAliases(type, recDefined, ctx) }));
+      const props = ty.props.map(({ name, type }) => ({
+        name,
+        type: expandTypeAliases(type, recDefined, ctx),
+      }));
       return { tag: "Object", props };
     }
     case "TaggedUnion": {
       const variants = ty.variants.map(({ tagLabel, props }) => ({
         tagLabel,
-        props: props.map(({ name, type }) => ({ name, type: expandTypeAliases(type, recDefined, ctx) })),
+        props: props.map(({ name, type }) => ({
+          name,
+          type: expandTypeAliases(type, recDefined, ctx),
+        })),
       }));
       return { tag: "TaggedUnion", variants };
     }
     case "Rec": {
       const newCtx = extendContextWithTypeVars(ctx, [ty.name]);
-      return { tag: "Rec", name: ty.name, type: expandTypeAliases(ty.type, recDefined, newCtx) };
+      return {
+        tag: "Rec",
+        name: ty.name,
+        type: expandTypeAliases(ty.type, recDefined, newCtx),
+      };
     }
     case "TypeAbs": {
       const newCtx = extendContextWithTypeVars(ctx, ty.typeParams);
-      return { tag: "TypeAbs", typeParams: ty.typeParams, type: expandTypeAliases(ty.type, recDefined, newCtx) };
+      return {
+        tag: "TypeAbs",
+        typeParams: ty.typeParams,
+        type: expandTypeAliases(ty.type, recDefined, newCtx),
+      };
     }
     case "TypeVar": {
       const typeArgs = ty.typeArgs;
       if (typeArgs) {
-        if (ty.name in ctx.typeVarBindings) error(`not a generic type: ${ty.name}`, ty);
-        if (recDefined.has(ty.name)) error(`type recursion for generics is not supported`, ty);
-        if (!(ty.name in ctx.globalTypeAliasMap)) error(`unbound type variable: ${ty.name}`, ty);
+        if (ty.name in ctx.typeVarBindings) {
+          error(`not a generic type: ${ty.name}`, ty);
+        }
+        if (recDefined.has(ty.name)) {
+          error(`type recursion for generics is not supported`, ty);
+        }
+        if (!(ty.name in ctx.globalTypeAliasMap)) {
+          error(`unbound type variable: ${ty.name}`, ty);
+        }
         const { typeParams, type } = ctx.globalTypeAliasMap[ty.name];
         if (!typeParams) error(`not a generic type: ${ty.name}`, ty);
-        if (typeParams.length !== typeArgs.length) error(`wrong number of type arguments for ${ty.name}`, ty);
+        if (typeParams.length !== typeArgs.length) {
+          error(`wrong number of type arguments for ${ty.name}`, ty);
+        }
         const typeVarBindings = typeParams.reduce((bindings, typeParam, i) => {
-          return { ...bindings, [typeParam]: expandTypeAliases(typeArgs[i], recDefined, ctx) };
+          return {
+            ...bindings,
+            [typeParam]: expandTypeAliases(typeArgs[i], recDefined, ctx),
+          };
         }, ctx.typeVarBindings);
         const newCtx: Context = {
           globalTypeAliasMap: ctx.globalTypeAliasMap,
           typeVarBindings,
         };
-        const retTy = expandTypeAliases(type, recDefined.union(new Set([ty.name])), newCtx);
+        const retTy = expandTypeAliases(
+          type,
+          recDefined.union(new Set([ty.name])),
+          newCtx,
+        );
         if (freeTypeVars(retTy).has(ty.name)) error("bug?", ty);
         return retTy;
       } else {
         if (ty.name in ctx.typeVarBindings) return ctx.typeVarBindings[ty.name];
         if (recDefined.has(ty.name)) return { tag: "TypeVar", name: ty.name };
-        if (!(ty.name in ctx.globalTypeAliasMap)) error(`unbound type variable: ${ty.name}`, ty);
+        if (!(ty.name in ctx.globalTypeAliasMap)) {
+          error(`unbound type variable: ${ty.name}`, ty);
+        }
         const { typeParams, type } = ctx.globalTypeAliasMap[ty.name];
         if (typeParams) error(`type arguments are required for ${ty.name}`, ty);
         const newCtx: Context = {
           globalTypeAliasMap: ctx.globalTypeAliasMap,
           typeVarBindings: {},
         };
-        const retTy = expandTypeAliases(type, recDefined.union(new Set([ty.name])), newCtx);
-        return freeTypeVars(retTy).has(ty.name) ? { tag: "Rec", name: ty.name, type: retTy } : retTy;
+        const retTy = expandTypeAliases(
+          type,
+          recDefined.union(new Set([ty.name])),
+          newCtx,
+        );
+        return freeTypeVars(retTy).has(ty.name)
+          ? { tag: "Rec", name: ty.name, type: retTy }
+          : retTy;
       }
     }
     case "Undefined":
@@ -522,27 +686,41 @@ function simplifyType(ty: Type, ctx: Context) {
 
 // Helper functions to get properties of estree nodes
 
-function getIdentifier(node: p.TSESTree.Expression | p.TSESTree.PrivateIdentifier | p.TSESTree.TSQualifiedName) {
+function getIdentifier(
+  node:
+    | p.TSESTree.Expression
+    | p.TSESTree.PrivateIdentifier
+    | p.TSESTree.TSQualifiedName,
+) {
   if (node.type !== "Identifier") error("identifier expected", node);
   return node.name;
 }
 
 function getLiteralString(node: p.TSESTree.Expression) {
-  if (node.type !== "Literal" || typeof node.value !== "string") error("", node);
+  if (node.type !== "Literal" || typeof node.value !== "string") {
+    error("", node);
+  }
   return node.value;
 }
 
 function getTypeProp(member: p.TSESTree.TypeElement) {
-  if (member.type !== "TSPropertySignature" || member.key.type !== "Identifier" || !member.typeAnnotation) {
+  if (
+    member.type !== "TSPropertySignature" || member.key.type !== "Identifier" ||
+    !member.typeAnnotation
+  ) {
     error("object type must have only normal key-value paris", member);
   }
   return { key: member.key.name, type: member.typeAnnotation.typeAnnotation };
 }
 
 function getProp(property: p.TSESTree.ObjectLiteralElement) {
-  if (property.type === "SpreadElement") error("spread operator is not allowed", property);
+  if (property.type === "SpreadElement") {
+    error("spread operator is not allowed", property);
+  }
   if (property.computed) error("key must be bare", property);
-  if (property.value.type === "AssignmentPattern") error("AssignmentPattern is not allowed", property);
+  if (property.value.type === "AssignmentPattern") {
+    error("AssignmentPattern is not allowed", property);
+  }
   if (property.value.type === "TSEmptyBodyFunctionExpression") {
     error("TSEmptyBodyFunctionExpression is not allowed", property);
   }
@@ -559,7 +737,10 @@ function getTagAndProps(node: p.TSESTree.ObjectExpression) {
 }
 
 function getSwitchVarName(node: p.TSESTree.Expression) {
-  if (node.type !== "MemberExpression" || node.computed || getIdentifier(node.property) !== "tag") {
+  if (
+    node.type !== "MemberExpression" || node.computed ||
+    getIdentifier(node.property) !== "tag"
+  ) {
     error(`switch statement must be switch(VAR.tag) { ... }`, node);
   }
   return getIdentifier(node.object);
@@ -573,19 +754,38 @@ function getParam(node: p.TSESTree.Parameter): Param {
   return { name, type };
 }
 
-function getRecFunc(node: p.TSESTree.FunctionDeclaration, ctx: Context, restFunc: (() => Term) | null): Term {
+function getRecFunc(
+  node: p.TSESTree.FunctionDeclaration,
+  ctx: Context,
+  restFunc: (() => Term) | null,
+): Term {
   if (!node.id) error("function name is required", node);
   if (!node.returnType) error("function return type is required", node);
   const funcName = node.id.name;
-  if (node.typeParameters) error("type parameter is not supported for function declaration", node);
+  if (node.typeParameters) {
+    error("type parameter is not supported for function declaration", node);
+  }
   const params = node.params.map((param) => {
     const { name, type } = getParam(param);
     return { name, type: simplifyType(type, ctx) };
   });
-  const retType = simplifyType(convertType(node.returnType.typeAnnotation), ctx);
+  const retType = simplifyType(
+    convertType(node.returnType.typeAnnotation),
+    ctx,
+  );
   const body = convertStmts(node.body.body, true, ctx);
-  const rest: Term = restFunc ? restFunc() : { tag: "var", name: funcName, loc: node.loc };
-  return { tag: "recFunc", funcName, params, retType, body, rest, loc: node.loc };
+  const rest: Term = restFunc
+    ? restFunc()
+    : { tag: "var", name: funcName, loc: node.loc };
+  return {
+    tag: "recFunc",
+    funcName,
+    params,
+    retType,
+    body,
+    rest,
+    loc: node.loc,
+  };
 }
 
 // Convert estree type node to our simplified node definition
@@ -598,7 +798,11 @@ function convertType(node: p.TSESTree.TypeNode): Type {
     case "TSStringKeyword":
       return { tag: "String", loc: node.loc };
     case "TSArrayType": {
-      return { tag: "Array", elemType: convertType(node.elementType), loc: node.loc };
+      return {
+        tag: "Array",
+        elemType: convertType(node.elementType),
+        loc: node.loc,
+      };
     }
     case "TSFunctionType": {
       if (!node.returnType) error("return type is required", node);
@@ -606,8 +810,12 @@ function convertType(node: p.TSESTree.TypeNode): Type {
       const retType = convertType(node.returnType.typeAnnotation);
       const funcTy: Type = { tag: "Func", params, retType };
       if (!node.typeParameters) return funcTy;
-      const typeParams = node.typeParameters.params.map((typeParameter) => typeParameter.name.name);
-      if (new Set(typeParams).size !== typeParams.length) error("duplicate type parameters", node);
+      const typeParams = node.typeParameters.params.map((typeParameter) =>
+        typeParameter.name.name
+      );
+      if (new Set(typeParams).size !== typeParams.length) {
+        error("duplicate type parameters", node);
+      }
       return { tag: "TypeAbs", typeParams, type: funcTy, loc: node.loc };
     }
     case "TSTypeLiteral": {
@@ -633,17 +841,26 @@ function convertType(node: p.TSESTree.TypeNode): Type {
         }
         const tagLabel = getLiteralString(tagType.literal);
         const variant3 = variant2.filter(({ key }) => key !== "tag");
-        const props = variant3.map(({ key, type }) => ({ name: key, type: convertType(type) }));
+        const props = variant3.map(({ key, type }) => ({
+          name: key,
+          type: convertType(type),
+        }));
         return { tagLabel, props };
       });
       return { tag: "TaggedUnion", variants, loc: node.loc };
     }
     case "TSTypeReference": {
-      const typeArgs = node.typeArguments?.params.map((tyArg) => convertType(tyArg));
+      const typeArgs = node.typeArguments?.params.map((tyArg) =>
+        convertType(tyArg)
+      );
       const name = getIdentifier(node.typeName);
       if (name === "Record") {
-        if (!typeArgs || typeArgs.length !== 2) error("Record must have 2 type arguments", node);
-        if (typeArgs[0].tag !== "String") error("Record must be Record<string, type>", node);
+        if (!typeArgs || typeArgs.length !== 2) {
+          error("Record must have 2 type arguments", node);
+        }
+        if (typeArgs[0].tag !== "String") {
+          error("Record must be Record<string, type>", node);
+        }
         return { tag: "Record", elemType: typeArgs[1], loc: node.loc };
       }
       return { tag: "TypeVar", name, typeArgs, loc: node.loc };
@@ -655,14 +872,29 @@ function convertType(node: p.TSESTree.TypeNode): Type {
 
 function newIfNode(cond: Term, thn: Term, els: Term, loc: Location): Term {
   if (cond.tag === "compare") {
-    if (cond.left.tag === "objectGet" && cond.left.obj.tag === "var" && cond.left.propName == "tag") {
+    if (
+      cond.left.tag === "objectGet" && cond.left.obj.tag === "var" &&
+      cond.left.propName == "tag"
+    ) {
       if (cond.right.tag === "string") {
         const varName = cond.left.obj.name;
         const tagLabel = cond.right.s;
         if (cond.op === "===") {
-          return { tag: "taggedUnionGet", varName, clauses: [{ tagLabel, term: thn }], defaultClause: els, loc };
+          return {
+            tag: "taggedUnionGet",
+            varName,
+            clauses: [{ tagLabel, term: thn }],
+            defaultClause: els,
+            loc,
+          };
         } else if (cond.op === "!==") {
-          return { tag: "taggedUnionGet", varName, clauses: [{ tagLabel, term: els }], defaultClause: thn, loc };
+          return {
+            tag: "taggedUnionGet",
+            varName,
+            clauses: [{ tagLabel, term: els }],
+            defaultClause: thn,
+            loc,
+          };
         }
       }
     }
@@ -674,13 +906,17 @@ function newIfNode(cond: Term, thn: Term, els: Term, loc: Location): Term {
 function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
   switch (node.type) {
     case "UnaryExpression": {
-      if (node.operator !== "!") error(`unsupported operator: ${node.operator}`, node);
+      if (node.operator !== "!") {
+        error(`unsupported operator: ${node.operator}`, node);
+      }
       const body = convertExpr(node.argument, ctx);
       return { tag: "not", cond: body, loc: node.loc };
     }
     // deno-lint-ignore no-fallthrough
     case "BinaryExpression": {
-      if (node.left.type === "PrivateIdentifier") error("private identifer is not allowed", node.left);
+      if (node.left.type === "PrivateIdentifier") {
+        error("private identifer is not allowed", node.left);
+      }
       switch (node.operator) {
         case "+": {
           const left = convertExpr(node.left, ctx);
@@ -691,7 +927,13 @@ function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
         case "!==": {
           const left = convertExpr(node.left, ctx);
           const right = convertExpr(node.right, ctx);
-          return { tag: "compare", op: node.operator, left, right, loc: node.loc };
+          return {
+            tag: "compare",
+            op: node.operator,
+            left,
+            right,
+            loc: node.loc,
+          };
         }
         case "in": {
           const key = convertExpr(node.left, ctx);
@@ -717,31 +959,57 @@ function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
           error(`unsupported literal: ${node.value}`, node);
       }
     case "ArrowFunctionExpression": {
-      const typeParams = node.typeParameters?.params.map((typeParameter) => typeParameter.name.name);
-      const newCtx = typeParams ? extendContextWithTypeVars(ctx, typeParams) : ctx;
+      const typeParams = node.typeParameters?.params.map((typeParameter) =>
+        typeParameter.name.name
+      );
+      const newCtx = typeParams
+        ? extendContextWithTypeVars(ctx, typeParams)
+        : ctx;
       const params = node.params.map((param) => {
         const { name, type } = getParam(param);
         return { name, type: simplifyType(type, newCtx) };
       });
       let retType;
       if (node.returnType) {
-        retType = simplifyType(convertType(node.returnType.typeAnnotation), ctx);
+        retType = simplifyType(
+          convertType(node.returnType.typeAnnotation),
+          ctx,
+        );
       }
       const body = node.body.type === "BlockStatement"
         ? convertStmts(node.body.body, true, newCtx)
         : convertExpr(node.body, newCtx);
-      const func: Term = { tag: "func", params, ...(retType !== undefined ? { retType } : {}), body, loc: node.loc };
-      if (typeParams && new Set(typeParams).size !== typeParams.length) error("duplicate type parameters", node);
-      return typeParams ? { tag: "typeAbs", typeParams, body: func, loc: node.typeParameters!.loc } : func;
+      const func: Term = {
+        tag: "func",
+        params,
+        ...(retType !== undefined ? { retType } : {}),
+        body,
+        loc: node.loc,
+      };
+      if (typeParams && new Set(typeParams).size !== typeParams.length) {
+        error("duplicate type parameters", node);
+      }
+      return typeParams
+        ? {
+          tag: "typeAbs",
+          typeParams,
+          body: func,
+          loc: node.typeParameters!.loc,
+        }
+        : func;
     }
     case "CallExpression": {
       const args = node.arguments.map((argument) => {
-        if (argument.type === "SpreadElement") error("argument must be an expression", argument);
+        if (argument.type === "SpreadElement") {
+          error("argument must be an expression", argument);
+        }
         return convertExpr(argument, ctx);
       });
       let func = convertExpr(node.callee, ctx);
       if (node.typeArguments) {
-        const typeArgs = node.typeArguments.params.map((param) => simplifyType(convertType(param), ctx));
+        const typeArgs = node.typeArguments.params.map((param) =>
+          simplifyType(convertType(param), ctx)
+        );
         func = { tag: "typeApp", typeAbs: func, typeArgs, loc: node.loc };
       }
       return { tag: "call", func, args, loc: node.loc };
@@ -760,12 +1028,21 @@ function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
           props.forEach(({ key, value }) => {
             props2.push({ name: key, term: convertExpr(value, ctx) });
           });
-          return { tag: "taggedUnionNew", tagLabel: tag, props: props2, as: ty, loc: node.loc };
+          return {
+            tag: "taggedUnionNew",
+            tagLabel: tag,
+            props: props2,
+            as: ty,
+            loc: node.loc,
+          };
         }
         case "ArrayExpression": {
           const ty = simplifyType(convertType(node.typeAnnotation), ctx);
           if (node.expression.elements.length !== 0) {
-            error("type-asserted array literal must be empty", node.expression.elements);
+            error(
+              "type-asserted array literal must be empty",
+              node.expression.elements,
+            );
           }
           return { tag: "arrayNew", aryType: ty, loc: node.loc };
         }
@@ -782,13 +1059,18 @@ function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
         const index = convertExpr(node.property, ctx);
         return { tag: "member", base, index, loc: node.loc };
       }
-      if (node.property.type !== "Identifier") error("object member must be OBJ.STR", node.property);
+      if (node.property.type !== "Identifier") {
+        error("object member must be OBJ.STR", node.property);
+      }
       const obj = convertExpr(node.object, ctx);
       const propName = node.property.name;
       return { tag: "objectGet", obj, propName, loc: node.loc };
     }
     case "ArrayExpression": {
-      if (node.elements.length !== 2 || !node.elements[0] || node.elements[0].type !== "SpreadElement") {
+      if (
+        node.elements.length !== 2 || !node.elements[0] ||
+        node.elements[0].type !== "SpreadElement"
+      ) {
         error(`array must be "[...ary, val]"`, node);
       }
       if (!node.elements[1] || node.elements[1].type === "SpreadElement") {
@@ -799,7 +1081,9 @@ function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
       return { tag: "arrayExt", ary: base, val, loc: node.loc };
     }
     case "ObjectExpression": {
-      if (node.properties.length === 0) error("bare empty object is not allowed", node);
+      if (node.properties.length === 0) {
+        error("bare empty object is not allowed", node);
+      }
       if (node.properties.length <= 2) {
         if (node.properties[0].type === "SpreadElement") {
           const record = convertExpr(node.properties[0].argument, ctx);
@@ -808,9 +1092,16 @@ function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
           }
           if (node.properties[1].type !== "SpreadElement") {
             const property = node.properties[1];
-            if (!property.computed) error(`record extension must be "{ ...record, [key]: value }"`, property);
+            if (!property.computed) {
+              error(
+                `record extension must be "{ ...record, [key]: value }"`,
+                property,
+              );
+            }
             const key = convertExpr(property.key, ctx);
-            if (property.value.type === "AssignmentPattern") error("AssignmentPattern is not allowed", property);
+            if (property.value.type === "AssignmentPattern") {
+              error("AssignmentPattern is not allowed", property);
+            }
             if (property.value.type === "TSEmptyBodyFunctionExpression") {
               error("TSEmptyBodyFunctionExpression is not allowed", property);
             }
@@ -826,7 +1117,9 @@ function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
       return { tag: "objectNew", props, loc: node.loc };
     }
     case "AssignmentExpression": {
-      if (node.operator !== "=") error(`unsupported operator: ${node.operator}`, node);
+      if (node.operator !== "=") {
+        error(`unsupported operator: ${node.operator}`, node);
+      }
       const varName = getIdentifier(node.left);
       const init = convertExpr(node.right, ctx);
       return { tag: "assign", name: varName, init, loc: node.loc };
@@ -841,7 +1134,9 @@ function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
     case "TSNonNullExpression":
       return convertExpr(node.expression, ctx);
     case "TSInstantiationExpression": {
-      const typeArgs = node.typeArguments.params.map((param) => simplifyType(convertType(param), ctx));
+      const typeArgs = node.typeArguments.params.map((param) =>
+        simplifyType(convertType(param), ctx)
+      );
       const typeAbs = convertExpr(node.expression, ctx);
       return { tag: "typeApp", typeAbs, typeArgs, loc: node.loc };
     }
@@ -851,42 +1146,63 @@ function convertExpr(node: p.TSESTree.Expression, ctx: Context): Term {
 }
 
 // Convert estree statement nodes to our simplified node definition
-function convertStmts(nodes: p.TSESTree.Statement[], requireReturn: boolean, ctx: Context): Term {
+function convertStmts(
+  nodes: p.TSESTree.Statement[],
+  requireReturn: boolean,
+  ctx: Context,
+): Term {
   function convertStmt(i: number, ctx: Context): Term {
     const last = nodes.length - 1 === i;
     const node = nodes[i];
     switch (node.type) {
       case "VariableDeclaration": {
         if (last && requireReturn) error("return is required", node);
-        if (node.declarations.length !== 1) error("multiple variable declaration is not allowed", node);
+        if (node.declarations.length !== 1) {
+          error("multiple variable declaration is not allowed", node);
+        }
         const decl = node.declarations[0];
         if (!decl.init) error("variable initializer is required", decl);
         const name = getIdentifier(decl.id);
         const init = convertExpr(decl.init, ctx);
-        const rest: Term = last ? { tag: "var", name, loc: node.loc } : convertStmt(i + 1, ctx);
+        const rest: Term = last
+          ? { tag: "var", name, loc: node.loc }
+          : convertStmt(i + 1, ctx);
         return { tag: "const", name, init, rest, loc: node.loc };
       }
       case "ExportNamedDeclaration": {
         if (last && requireReturn) error("return is required", node);
-        if (!node.declaration || node.declaration.type !== "FunctionDeclaration") {
+        if (
+          !node.declaration || node.declaration.type !== "FunctionDeclaration"
+        ) {
           error("export must have a function declaration", node);
         }
-        return getRecFunc(node.declaration, ctx, last ? null : () => convertStmt(i + 1, ctx));
+        return getRecFunc(
+          node.declaration,
+          ctx,
+          last ? null : () => convertStmt(i + 1, ctx),
+        );
       }
       case "FunctionDeclaration": {
         if (last && requireReturn) error("return is required", node);
-        return getRecFunc(node, ctx, last ? null : () => convertStmt(i + 1, ctx));
+        return getRecFunc(
+          node,
+          ctx,
+          last ? null : () => convertStmt(i + 1, ctx),
+        );
       }
       case "ExpressionStatement": {
         if (
-          node.expression.type === "CallExpression" && node.expression.callee.type === "Identifier" &&
+          node.expression.type === "CallExpression" &&
+          node.expression.callee.type === "Identifier" &&
           node.expression.callee.name === "error"
         ) {
           return { tag: "undefined", loc: node.loc };
         }
         const body = convertExpr(node.expression, ctx);
         if (last && !requireReturn) return body;
-        const rest: Term = last ? { tag: "undefined", loc: node.loc } : convertStmt(i + 1, ctx);
+        const rest: Term = last
+          ? { tag: "undefined", loc: node.loc }
+          : convertStmt(i + 1, ctx);
         return { tag: "seq", body, rest, loc: node.loc };
       }
       case "ReturnStatement": {
@@ -901,10 +1217,14 @@ function convertStmts(nodes: p.TSESTree.Statement[], requireReturn: boolean, ctx
         let els: Term;
         if (!node.alternate) {
           if (!requireReturn) error("else clause is requried", node);
-          els = nodes[i + 1] ? convertStmt(i + 1, ctx) : { tag: "undefined", loc: node.loc };
+          els = nodes[i + 1]
+            ? convertStmt(i + 1, ctx)
+            : { tag: "undefined", loc: node.loc };
         } else {
           els = convertStmts(
-            node.alternate.type == "BlockStatement" ? node.alternate.body : [node.alternate],
+            node.alternate.type == "BlockStatement"
+              ? node.alternate.body
+              : [node.alternate],
             requireReturn,
             ctx,
           );
@@ -913,56 +1233,99 @@ function convertStmts(nodes: p.TSESTree.Statement[], requireReturn: boolean, ctx
       }
       case "ForOfStatement": {
         if (!requireReturn) error("for statement is not allowed", node);
-        if (node.left.type !== "VariableDeclaration") error(`for statement must be "for (let i of ary)"`, node);
+        if (node.left.type !== "VariableDeclaration") {
+          error(`for statement must be "for (let i of ary)"`, node);
+        }
         const varName = getIdentifier(node.left.declarations[0].id);
         const ary = convertExpr(node.right, ctx);
         if (node.body.type !== "BlockStatement") {
           error(`for statement must be "for (let i of ary)"`, node);
         }
         const body = convertStmts(node.body.body, true, ctx);
-        const rest: Term = nodes[i + 1] ? convertStmt(i + 1, ctx) : { tag: "undefined", loc: node.loc };
+        const rest: Term = nodes[i + 1]
+          ? convertStmt(i + 1, ctx)
+          : { tag: "undefined", loc: node.loc };
         return { tag: "forOf", ary, var: varName, body, rest, loc: node.loc };
       }
       case "ForStatement": {
         if (!requireReturn) error("for statement is not allowed", node);
         if (!node.init || node.init.type !== "VariableDeclaration") {
-          error(`for statement must be "for (let i = 0; i < ary.length; i++)"`, node);
+          error(
+            `for statement must be "for (let i = 0; i < ary.length; i++)"`,
+            node,
+          );
         }
         const inits = node.init;
         if (inits.declarations.length !== 1) {
-          error(`for statement must be "for (let i = 0; i < ary.length; i++)"`, node);
+          error(
+            `for statement must be "for (let i = 0; i < ary.length; i++)"`,
+            node,
+          );
         }
         const idxVarName = getIdentifier(inits.declarations[0].id);
         const init = inits.declarations[0].init;
         if (!init || init.type !== "Literal" || init.value !== 0) {
-          error(`for statement must be "for (let i = 0; i < ary.length; i++)"`, node);
+          error(
+            `for statement must be "for (let i = 0; i < ary.length; i++)"`,
+            node,
+          );
         }
-        if (!node.test || node.test.type !== "BinaryExpression" || node.test.operator !== "<") {
-          error(`for statement must be "for (let i = 0; i < ary.length; i++)"`, node);
+        if (
+          !node.test || node.test.type !== "BinaryExpression" ||
+          node.test.operator !== "<"
+        ) {
+          error(
+            `for statement must be "for (let i = 0; i < ary.length; i++)"`,
+            node,
+          );
         }
         const testLeft = node.test.left;
         if (testLeft.type !== "Identifier" || testLeft.name !== idxVarName) {
-          error(`for statement must be "for (let i = 0; i < ary.length; i++)"`, node);
+          error(
+            `for statement must be "for (let i = 0; i < ary.length; i++)"`,
+            node,
+          );
         }
         const testRight = node.test.right;
         if (
-          testRight.type !== "MemberExpression" || testRight.computed || testRight.property.type !== "Identifier" ||
+          testRight.type !== "MemberExpression" || testRight.computed ||
+          testRight.property.type !== "Identifier" ||
           testRight.property.name !== "length"
         ) {
-          error(`for statement must be "for (let i = 0; i < ary.length; i++)"`, node);
+          error(
+            `for statement must be "for (let i = 0; i < ary.length; i++)"`,
+            node,
+          );
         }
         const ary = convertExpr(testRight.object, ctx);
-        if (!node.update || node.update.type !== "UpdateExpression" || node.update.operator !== "++") {
-          error(`for statement must be "for (let i = 0; i < ary.length; i++)"`, node);
+        if (
+          !node.update || node.update.type !== "UpdateExpression" ||
+          node.update.operator !== "++"
+        ) {
+          error(
+            `for statement must be "for (let i = 0; i < ary.length; i++)"`,
+            node,
+          );
         }
-        if (node.update.argument.type !== "Identifier" || node.update.argument.name !== idxVarName) {
-          error(`for statement must be "for (let i = 0; i < ary.length; i++)"`, node);
+        if (
+          node.update.argument.type !== "Identifier" ||
+          node.update.argument.name !== idxVarName
+        ) {
+          error(
+            `for statement must be "for (let i = 0; i < ary.length; i++)"`,
+            node,
+          );
         }
         if (node.body.type !== "BlockStatement") {
-          error(`for statement must be "for (let i = 0; i < ary.length; i++)"`, node);
+          error(
+            `for statement must be "for (let i = 0; i < ary.length; i++)"`,
+            node,
+          );
         }
         const body = convertStmts(node.body.body, true, ctx);
-        const rest: Term = nodes[i + 1] ? convertStmt(i + 1, ctx) : { tag: "undefined", loc: node.loc };
+        const rest: Term = nodes[i + 1]
+          ? convertStmt(i + 1, ctx)
+          : { tag: "undefined", loc: node.loc };
         return { tag: "for", ary, idx: idxVarName, body, rest, loc: node.loc };
       }
       case "SwitchStatement": {
@@ -971,15 +1334,27 @@ function convertStmts(nodes: p.TSESTree.Statement[], requireReturn: boolean, ctx
         let defaultClause: Term = { tag: "undefined", loc: node.loc };
         node.cases.forEach((caseNode) => {
           const conseq = caseNode.consequent;
-          const stmts = conseq.length === 1 && conseq[0].type === "BlockStatement" ? conseq[0].body : conseq;
+          const stmts =
+            conseq.length === 1 && conseq[0].type === "BlockStatement"
+              ? conseq[0].body
+              : conseq;
           const clause = convertStmts(stmts, requireReturn, ctx);
           if (caseNode.test) {
-            clauses.push({ tagLabel: getLiteralString(caseNode.test), term: clause });
+            clauses.push({
+              tagLabel: getLiteralString(caseNode.test),
+              term: clause,
+            });
           } else {
             defaultClause = clause;
           }
         });
-        return { tag: "taggedUnionGet", varName, clauses, defaultClause, loc: node.loc };
+        return {
+          tag: "taggedUnionGet",
+          varName,
+          clauses,
+          defaultClause,
+          loc: node.loc,
+        };
       }
       case "ThrowStatement": {
         return { tag: "undefined", loc: node.loc };
@@ -1004,7 +1379,9 @@ function convertProgram(nodes: p.TSESTree.Statement[]): Term {
         return false;
       case "TSTypeAliasDeclaration": {
         const name = node.id.name;
-        const typeParams = node.typeParameters ? node.typeParameters.params.map((param) => param.name.name) : null;
+        const typeParams = node.typeParameters
+          ? node.typeParameters.params.map((param) => param.name.name)
+          : null;
         const type = convertType(node.typeAnnotation);
         globalTypeAliasMap[name] = { typeParams, type };
         return false;
@@ -1027,7 +1404,10 @@ type ExtractTagsSub<T, K> = T extends Type | Term ? ExtractTags<T, K>
   : T extends Term[] ? ExtractTags<Term, K>[]
   : T extends (infer U)[] ? { [P in keyof U]: ExtractTags<U[P], K> }[]
   : T;
-type ExtractTags<T, K> = Extract<{ [P in keyof T]: ExtractTagsSub<T[P], K> }, { tag: K }>;
+type ExtractTags<T, K> = Extract<
+  { [P in keyof T]: ExtractTagsSub<T[P], K> },
+  { tag: K }
+>;
 
 function subsetSystem<Types extends Type["tag"], Terms extends Term["tag"]>(
   node: Term,
@@ -1038,7 +1418,10 @@ function subsetSystem<Types extends Type["tag"], Terms extends Term["tag"]>(
   // deno-lint-ignore no-explicit-any
   if (!node.tag) return node as any;
 
-  if (!(keepTypes as string[]).includes(node.tag) && !(keepTerms as string[]).includes(node.tag)) {
+  if (
+    !(keepTypes as string[]).includes(node.tag) &&
+    !(keepTerms as string[]).includes(node.tag)
+  ) {
     throw new Error(`"${node.tag}" is not allowed in this system`);
   }
 
@@ -1049,7 +1432,12 @@ function subsetSystem<Types extends Type["tag"], Terms extends Term["tag"]>(
     if (typeof val !== "object" || !val.tag) {
       newNode[key] = val;
     } else {
-      newNode[key] = subsetSystem<Types, Terms>(val, keepTypes, keepTerms, keepDefaultClause);
+      newNode[key] = subsetSystem<Types, Terms>(
+        val,
+        keepTypes,
+        keepTerms,
+        keepDefaultClause,
+      );
     }
   });
   return newNode;
@@ -1072,7 +1460,18 @@ export function parseBasic(code: string): TermForBasic {
   return subsetSystem(
     parse(code),
     ["Boolean", "Number", "Func"],
-    ["true", "false", "if", "number", "add", "var", "func", "call", "seq", "const"],
+    [
+      "true",
+      "false",
+      "if",
+      "number",
+      "add",
+      "var",
+      "func",
+      "call",
+      "seq",
+      "const",
+    ],
   );
 }
 
@@ -1080,13 +1479,34 @@ export function parseBasic2(code: string): TermForBasic2 {
   function conv(node: Term): Term {
     switch (node.tag) {
       case "if":
-        return { tag: "if", cond: conv(node.cond), thn: conv(node.thn), els: conv(node.els), loc: node.loc };
+        return {
+          tag: "if",
+          cond: conv(node.cond),
+          thn: conv(node.thn),
+          els: conv(node.els),
+          loc: node.loc,
+        };
       case "add":
-        return { tag: "add", left: conv(node.left), right: conv(node.right), loc: node.loc };
+        return {
+          tag: "add",
+          left: conv(node.left),
+          right: conv(node.right),
+          loc: node.loc,
+        };
       case "func":
-        return { tag: "func", params: node.params, body: conv(node.body), loc: node.loc };
+        return {
+          tag: "func",
+          params: node.params,
+          body: conv(node.body),
+          loc: node.loc,
+        };
       case "call":
-        return { tag: "call", func: conv(node.func), args: node.args.map(conv), loc: node.loc };
+        return {
+          tag: "call",
+          func: conv(node.func),
+          args: node.args.map(conv),
+          loc: node.loc,
+        };
       case "seq":
       case "const": {
         const body: Term[] = [];
@@ -1098,7 +1518,12 @@ export function parseBasic2(code: string): TermForBasic2 {
               break;
             }
             case "const": {
-              body.push({ tag: "const2", name: node.name, init: conv(node.init), loc: node.loc });
+              body.push({
+                tag: "const2",
+                name: node.name,
+                init: conv(node.init),
+                loc: node.loc,
+              });
               node = node.rest;
               break;
             }
@@ -1116,7 +1541,18 @@ export function parseBasic2(code: string): TermForBasic2 {
   return subsetSystem(
     conv(parse(code)),
     ["Boolean", "Number", "Func"],
-    ["true", "false", "if", "number", "add", "var", "func", "call", "seq2", "const2"],
+    [
+      "true",
+      "false",
+      "if",
+      "number",
+      "add",
+      "var",
+      "func",
+      "call",
+      "seq2",
+      "const2",
+    ],
   );
 }
 
@@ -1186,7 +1622,19 @@ export function parseSub(code: string): TermForSub {
   return subsetSystem(
     parse(code),
     ["Boolean", "Number", "Func", "Object"],
-    ["true", "false", "number", "add", "var", "func", "call", "seq", "const", "objectNew", "objectGet"],
+    [
+      "true",
+      "false",
+      "number",
+      "add",
+      "var",
+      "func",
+      "call",
+      "seq",
+      "const",
+      "objectNew",
+      "objectGet",
+    ],
   );
 }
 
@@ -1240,14 +1688,39 @@ export function parsePoly(code: string): TermForPoly {
   return subsetSystem(
     parse(code),
     ["Boolean", "Number", "Func", "TypeAbs", "TypeVar"],
-    ["true", "false", "if", "number", "add", "var", "func", "call", "seq", "const", "typeAbs", "typeApp"],
+    [
+      "true",
+      "false",
+      "if",
+      "number",
+      "add",
+      "var",
+      "func",
+      "call",
+      "seq",
+      "const",
+      "typeAbs",
+      "typeApp",
+    ],
   );
 }
 
 export function parseSelf(code: string): TermForSelf {
   return subsetSystem(
     parse(code),
-    ["Boolean", "Number", "String", "Option", "Array", "Record", "Func", "Object", "TaggedUnion", "Rec", "TypeVar"],
+    [
+      "Boolean",
+      "Number",
+      "String",
+      "Option",
+      "Array",
+      "Record",
+      "Func",
+      "Object",
+      "TaggedUnion",
+      "Rec",
+      "TypeVar",
+    ],
     [
       "true",
       "false",
@@ -1291,7 +1764,11 @@ export function parseSelf(code: string): TermForSelf {
 export function error(msg: string, node: any): never {
   if (node.loc) {
     const { start, end } = node.loc;
-    throw new Error(`test.ts:${start.line}:${start.column + 1}-${end.line}:${end.column + 1} ${msg}`);
+    throw new Error(
+      `test.ts:${start.line}:${start.column + 1}-${end.line}:${
+        end.column + 1
+      } ${msg}`,
+    );
   } else {
     throw new Error(msg);
   }
@@ -1318,16 +1795,23 @@ export function typeShow(ty: Type): string {
       return `Record<string, ${typeShow(ty.elemType)}>`;
     }
     case "Func": {
-      const params = ty.params.map(({ name, type }) => `${name}: ${typeShow(type)}`);
+      const params = ty.params.map(({ name, type }) =>
+        `${name}: ${typeShow(type)}`
+      );
       return `(${params.join(", ")}) => ${typeShow(ty.retType)}`;
     }
     case "Object": {
-      const props = ty.props.map(({ name, type }) => `${name}: ${typeShow(type)}`);
+      const props = ty.props.map(({ name, type }) =>
+        `${name}: ${typeShow(type)}`
+      );
       return `{ ${props.join("; ")} }`;
     }
     case "TaggedUnion": {
       const variants = ty.variants.map(({ tagLabel, props }) => {
-        const propsStr = [`tag: "${tagLabel}"`, ...props.map(({ name, type }) => `${name}: ${typeShow(type)}`)];
+        const propsStr = [
+          `tag: "${tagLabel}"`,
+          ...props.map(({ name, type }) => `${name}: ${typeShow(type)}`),
+        ];
         return `{ ${propsStr.join("; ")} }`;
       });
       return `(${variants.join(" | ")})`;
