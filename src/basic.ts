@@ -88,3 +88,6 @@ function typeEq(ty1: Type, ty2: Type): boolean {
         }
     }
 }
+
+console.log(typecheck(parseBasic("(x: number) => x"), {}));
+console.log(typecheck(parseBasic("((x: number) => x)(42)"), {}));
