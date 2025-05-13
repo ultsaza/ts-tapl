@@ -56,6 +56,16 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         const retType = typecheck(t.body, newTyEnv);
         return { tag: "Func", params: t.params, retType };
     }
+    case "call": {
+        const funcTy = typecheck(t.func, tyEnv);
+        if (funcTy.tag !== "Func") throw "function expected";
+        if (funcTy.params.length !== t.args.length) throw "wrong number of arguments";
+        for (let i = 0; i < t.args.length; i++) {
+            const argTy = typecheck(t.args[i], tyEnv);
+            if (!typeEq(funcTy.params[i].type, argTy)) throw "argument type mismatch";
+        }
+        return funcTy.retType;
+    }
     default:
       throw new Error("not implemented yet");
   }
