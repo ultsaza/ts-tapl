@@ -57,7 +57,8 @@ function typeEq(ty1: Type, ty2: Type): boolean {
             for (let i = 0; i < ty1.params.length; i++) {
                 if (!typeEq(ty1.params[i].type, ty2.params[i].type)) return false;
             }
-            return typeEq(ty1.retType, ty2.retType);
+            if (!typeEq(ty1.retType, ty2.retType)) return false;
+            return true
         }
     }
 }
