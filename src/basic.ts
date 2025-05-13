@@ -44,6 +44,10 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
       if (rightType.tag !== "Number") throw "number expected";
       return { tag: "Number" };
     }
+    case "var": {
+        if (tyEnv[t.name] === undefined) throw new Error(`undefined variable: ${t.name}`);
+        return tyEnv[t.name];
+    }
     default:
       throw new Error("not implemented yet");
   }
