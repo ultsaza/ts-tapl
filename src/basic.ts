@@ -18,30 +18,34 @@ type Term =
   | { tag: "const"; name: string; init: Term; rest: Term };
 
 type Param = { name: string; type: Type };
+type TypeEnv = Record<string, Type>;
 
-function typecheck(t: Term): Type {
+function typecheck(t: Term, tyEnv: TypeEnv): Type {
   switch (t.tag) {
     case "true":
       return { tag: "Boolean" };
     case "false":
       return { tag: "Boolean" };
     case "if": {
-      const condType = typecheck(t.cond);
-      const thnType = typecheck(t.thn);
-      const elsType = typecheck(t.els);
-      if (thnType !== elsType) throw "then and else must have the same type";
+      const condType = typecheck(t.cond, tyEnv);
+      if (condType.tag !== "Boolean") throw "boolean expected";
+      const thnType = typecheck(t.thn, tyEnv);
+      const elsType = typecheck(t.els, tyEnv);
+      if (!typeEq(thnType, elsType)) throw "then and else must have the same type";
       return thnType;
     }
     case "number": {
       return { tag: "Number" };
     }
     case "add": {
-      const leftType = typecheck(t.left);
+      const leftType = typecheck(t.left, tyEnv);
       if (leftType.tag !== "Number") throw "number expected";
-      const rightType = typecheck(t.right);
+      const rightType = typecheck(t.right, tyEnv);
       if (rightType.tag !== "Number") throw "number expected";
       return { tag: "Number" };
     }
+    default:
+      throw new Error("not implemented yet");
   }
 }
 
