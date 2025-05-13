@@ -19,7 +19,6 @@ function typecheck(t: Term): Type {
             return { tag: "Boolean" };
         case "if": {
             const condType = typecheck(t.cond);
-            if (condType.tag !== "Boolean") throw "boolean expected";
             const thnType = typecheck(t.thn);
             const elsType = typecheck(t.els);
             if (thnType !== elsType) throw "then and else must have the same type";
@@ -37,3 +36,6 @@ function typecheck(t: Term): Type {
         }    
     }
 }
+
+
+
