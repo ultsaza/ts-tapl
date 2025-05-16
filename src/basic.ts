@@ -66,6 +66,10 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         }
         return funcTy.retType;
     }
+    case "seq": {
+        typecheck(t.body, tyEnv);
+        return typecheck(t.rest, tyEnv);
+    }
     default:
       throw new Error("not implemented yet");
   }
@@ -88,6 +92,3 @@ function typeEq(ty1: Type, ty2: Type): boolean {
         }
     }
 }
-
-console.log(typecheck(parseBasic("(x: number) => x"), {}));
-console.log(typecheck(parseBasic("((x: number) => x)(42)"), {}));
