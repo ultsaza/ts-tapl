@@ -70,6 +70,11 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         typecheck(t.body, tyEnv);
         return typecheck(t.rest, tyEnv);
     }
+    case "const": {
+        const ty = typecheck(t.init, tyEnv);
+        const newTyEnv = { ...tyEnv, [t.name]: ty };
+        return typecheck(t.rest, newTyEnv);
+    }
     default:
       throw new Error("not implemented yet");
   }
