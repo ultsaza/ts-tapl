@@ -176,6 +176,14 @@ function subtype(ty1: Type, ty2: Type): boolean {
       return ty1.tag === "Boolean";
     case "Number":
       return ty1.tag === "Number";
-    
+    case "Object": {
+      if (ty1.tag !== "Object") return false;
+      for (const prop2 of ty2.props) {
+        const prop1 = ty1.props.find(p => p.name === prop2.name);
+        if (!prop1) return false;
+        if (!subtype(prop1.type, prop2.type)) return false;
+      }
+      return true;
+    }
   }
 }
