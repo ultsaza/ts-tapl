@@ -103,9 +103,25 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         return typecheck(t.rest, tyEnv);
     }
     case "const": {
-        const ty = typecheck(t.init, tyEnv);
-        const newTyEnv = { ...tyEnv, [t.name]: ty };
-        return typecheck(t.rest, newTyEnv);
+      if (t.init.tag === "func") {
+        if(!t.init.retType) error("return type is required for function", t.init);
+        const funcTy: Type = {
+          tag: "Func",
+          params: t.init.params,
+          retType: t.init.retType
+        };
+        const newTyEnv = { ...tyEnv };
+        for (const { name, type } of t.init.params) {
+          newTyEnv[name] = type;
+        }
+        const tyEnvAddRecfunc = { ...tyEnv, [t.name]: funcTy };
+        if (!typeEq(t.init.retType, typecheck(t.rest, tyEnvAddRecfunc))) error("wrong return type", t);
+        return typecheck(t.rest, tyEnvAddRecfunc);
+      } else {
+          const ty = typecheck(t.init, tyEnv);
+          const newTyEnv = { ...tyEnv, [t.name]: ty };
+          return typecheck(t.rest, newTyEnv);
+      }
     }
     case "objectNew": {
         const props = t.props.map(
