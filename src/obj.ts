@@ -66,11 +66,11 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         for (const { name, type } of t.params) {
             newTyEnv[name] = type;
         }
-        const retType = typecheck(t.body, newTyEnv);
+        const retTy = typecheck(t.body, newTyEnv);
         if (t.retType) {
-          if (!typeEq(retType, t.retType)) throw `return type ${t.retType} is different from expected type ${retType}`;
+          if (!typeEq(retTy, t.retType)) throw `return type mismatch`;
         }
-        return { tag: "Func", params: t.params, retType };
+        return { tag: "Func", params: t.params, retType: t.retType };
     }
     case "recFunc": {
       const funcTy: Type = {
@@ -170,4 +170,4 @@ function typeEq(ty1: Type, ty2: Type): boolean {
     }
 }
 
-console.log(parseRecFunc(""));
+console.log(typecheck(parseRecFunc("((n: number): boolean => 42)") as Term, {}));
