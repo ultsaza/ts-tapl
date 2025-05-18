@@ -170,4 +170,12 @@ function typeEq(ty1: Type, ty2: Type): boolean {
     }
 }
 
-console.log(typecheck(parseRecFunc("((n: number): boolean => 42)") as Term, {}));
+function subtype(ty1: Type, ty2: Type): boolean {
+  switch (ty2.tag) {
+    case "Boolean":
+      return ty1.tag === "Boolean";
+    case "Number":
+      return ty1.tag === "Number";
+    
+  }
+}
