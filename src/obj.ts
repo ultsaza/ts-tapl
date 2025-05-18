@@ -100,5 +100,15 @@ function typeEq(ty1: Type, ty2: Type): boolean {
             if (!typeEq(ty1.retType, ty2.retType)) return false;
             return true
         }
+        case "Object": {
+          if (ty1.tag !== "Object") return false;
+          if (ty1.props.length !== ty2.props.length) return false;
+          for (const prop2 of ty2.props) {
+            const prop1 = ty1.props.find(p => p.name === prop2.name);
+            if (!prop1) return false;
+            if (!typeEq(prop1.type, prop2.type)) return false;
+          }
+          return true;
+        }
     }
 }
