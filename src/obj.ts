@@ -94,7 +94,7 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         if (funcTy.params.length !== t.args.length) throw "wrong number of arguments";
         for (let i = 0; i < t.args.length; i++) {
             const argTy = typecheck(t.args[i], tyEnv);
-            if (!typeEq(funcTy.params[i].type, argTy)) throw "argument type mismatch";
+            if (!subtype(argTy, funcTy.params[i].type)) throw "argument type mismatch";
         }
         return funcTy.retType;
     }
