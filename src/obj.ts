@@ -1,4 +1,4 @@
-import { parseArith, parseBasic } from "./tiny-ts-parser.ts";
+import { parseArith, parseBasic, error } from "./tiny-ts-parser.ts";
 
 type Type =
   | { tag: "Boolean" }
@@ -6,7 +6,6 @@ type Type =
   | { tag: "Func"; params: Param[]; retType: Type}
   | { tag: "Object"; props: PropertyType[] };
  
-
 type Term =
   | { tag: "true" }
   | { tag: "false" }
@@ -87,6 +86,14 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         );
         return { tag: "Object", props };
     }
+    case "objectGet": {
+      const objTy = typecheck(t.obj, tyEnv);
+      if (objTy.tag !== "Object") error ("object type expected", t.obj);
+      const prop = objTy.props.find(p => p.name === t.propName);
+      if (!prop) error("unknown property name: ${t.propName}", t);
+      return prop.type;
+    }
+
     default:
       throw new Error("not implemented yet");
   }
