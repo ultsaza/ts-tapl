@@ -4,9 +4,8 @@ type Type =
   | { tag: "Boolean" }
   | { tag: "Number" }
   | { tag: "Func"; params: Param[]; retType: Type}
-  | { tag: "Object"; props: PropertyType[] }
-  | { tag: "objectNew"; props: PropertyTerm[] }
-  | { tag: "objectGet"; obj: Term; propName: string };
+  | { tag: "Object"; props: PropertyType[] };
+ 
 
 type Term =
   | { tag: "true" }
@@ -18,7 +17,9 @@ type Term =
   | { tag: "func"; params: Param[]; body: Term }
   | { tag: "call"; func: Term; args: Term[] }
   | { tag: "seq"; body: Term; rest: Term }
-  | { tag: "const"; name: string; init: Term; rest: Term };
+  | { tag: "const"; name: string; init: Term; rest: Term }
+  | { tag: "objectNew"; props: PropertyTerm[] }
+  | { tag: "objectGet"; obj: Term; propName: string };
 
 type Param = { name: string; type: Type };
 type TypeEnv = Record<string, Type>;
@@ -79,6 +80,12 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         const ty = typecheck(t.init, tyEnv);
         const newTyEnv = { ...tyEnv, [t.name]: ty };
         return typecheck(t.rest, newTyEnv);
+    }
+    case "objectNew": {
+        const props = t.props.map(
+          ({name, term}) => ({name, type: typecheck(term, tyEnv)}),
+        );
+        return { tag: "Object", props };
     }
     default:
       throw new Error("not implemented yet");
