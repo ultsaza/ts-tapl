@@ -1,4 +1,4 @@
-import { parseArith, parseBasic, error, parseObj } from "./tiny-ts-parser.ts";
+import { parseArith, parseBasic, error, parseObj, parseRecFunc } from "./tiny-ts-parser.ts";
 
 type Type =
   | { tag: "Boolean" }
@@ -13,7 +13,7 @@ type Term =
   | { tag: "number"; n: number }
   | { tag: "add"; left: Term; right: Term }
   | { tag: "var"; name: string }
-  | { tag: "func"; params: Param[]; body: Term }
+  | { tag: "func"; params: Param[]; retType: Type; body: Term }
   | { tag: "call"; func: Term; args: Term[] }
   | { tag: "seq"; body: Term; rest: Term }
   | { tag: "const"; name: string; init: Term; rest: Term }
@@ -67,6 +67,9 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
             newTyEnv[name] = type;
         }
         const retType = typecheck(t.body, newTyEnv);
+        if (t.retType) {
+          if (!typeEq(retType, t.retType)) throw `return type ${t.retType} is different from expected type ${retType}`;
+        }
         return { tag: "Func", params: t.params, retType };
     }
     case "recFunc": {
@@ -150,3 +153,5 @@ function typeEq(ty1: Type, ty2: Type): boolean {
         }
     }
 }
+
+console.log(parseRecFunc(""));
