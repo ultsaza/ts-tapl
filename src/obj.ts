@@ -4,6 +4,7 @@ type Type =
   | { tag: "Boolean" }
   | { tag: "Number" }
   | { tag: "Func"; params: Param[]; retType: Type}
+  | { tag: "Object"; props: PropertyType[] }
   | { tag: "objectNew"; props: PropertyTerm[] }
   | { tag: "objectGet"; obj: Term; propName: string };
 
@@ -22,6 +23,7 @@ type Term =
 type Param = { name: string; type: Type };
 type TypeEnv = Record<string, Type>;
 type PropertyTerm = { name: string; term: Term };
+type PropertyType = { name: string; type: Type };
 
 function typecheck(t: Term, tyEnv: TypeEnv): Type {
   switch (t.tag) {
