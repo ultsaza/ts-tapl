@@ -1,4 +1,4 @@
-import { parseArith, parseBasic, error } from "./tiny-ts-parser.ts";
+import { parseArith, parseBasic, error, parseObj } from "./tiny-ts-parser.ts";
 
 type Type =
   | { tag: "Boolean" }
@@ -18,7 +18,15 @@ type Term =
   | { tag: "seq"; body: Term; rest: Term }
   | { tag: "const"; name: string; init: Term; rest: Term }
   | { tag: "objectNew"; props: PropertyTerm[] }
-  | { tag: "objectGet"; obj: Term; propName: string };
+  | { tag: "objectGet"; obj: Term; propName: string }
+  | { 
+      tag: "recFunc";
+      funcName: string;
+      params: Param[];
+      retType: Type;
+      body: Term;
+      rest: Term;
+  };
 
 type Param = { name: string; type: Type };
 type TypeEnv = Record<string, Type>;
