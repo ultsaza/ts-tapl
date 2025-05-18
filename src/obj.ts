@@ -3,7 +3,9 @@ import { parseArith, parseBasic } from "./tiny-ts-parser.ts";
 type Type =
   | { tag: "Boolean" }
   | { tag: "Number" }
-  | { tag: "Func"; params: Param[]; retType: Type};
+  | { tag: "Func"; params: Param[]; retType: Type}
+  | { tag: "objectNew"; props: PropertyTerm[] }
+  | { tag: "objectGet"; obj: Term; propName: string };
 
 type Term =
   | { tag: "true" }
@@ -19,6 +21,7 @@ type Term =
 
 type Param = { name: string; type: Type };
 type TypeEnv = Record<string, Type>;
+type PropertyTerm = { name: string; term: Term };
 
 function typecheck(t: Term, tyEnv: TypeEnv): Type {
   switch (t.tag) {
