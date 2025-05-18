@@ -185,5 +185,13 @@ function subtype(ty1: Type, ty2: Type): boolean {
       }
       return true;
     }
+    case "Func": {
+      if (ty1.tag !== "Func") return false;
+      if (ty1.params.length !== ty2.params.length) return false;
+      for (let i = 0; i < ty1.params.length; i++) {
+        if (!subtype(ty2.params[i].type, ty1.params[i].type)) return false;
+      }
+      return subtype(ty1.retType, ty2.retType);
+    }
   }
 }
