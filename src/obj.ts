@@ -69,6 +69,22 @@ function typecheck(t: Term, tyEnv: TypeEnv): Type {
         const retType = typecheck(t.body, newTyEnv);
         return { tag: "Func", params: t.params, retType };
     }
+    case "recFunc": {
+      const funcTy: Type = {
+        tag: "Func",
+        params: t.params,
+        retType: t.retType
+      };
+      const newTyEnv = { ...tyEnv };
+      for (const { name, type } of t.params) {
+          newTyEnv[name] = type;
+      }
+      newTyEnv[t.funcName] = funcTy;
+      const retType = typecheck(t.body, newTyEnv);
+      if (!typeEq(t.retType, retType)) error("wrong return type", t);
+      const tyEnvAddRecFunc = { ...tyEnv,  [t.funcName]: funcTy}; // 仮引数を含まない, 定義された関数のみを追加した型環境.
+      return typecheck(t.rest, tyEnvAddRecFunc);
+    }
     case "call": {
         const funcTy = typecheck(t.func, tyEnv);
         if (funcTy.tag !== "Func") throw "function expected";
